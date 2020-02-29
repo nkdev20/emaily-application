@@ -21,7 +21,8 @@ class App extends Component
                 <BrowserRouter>
                     <div>
                         <Header />
-                        <Route exact={true} path="/" component={Landing} />
+                        <Route exac
+                        t={true} path="/" component={Landing} />
                         <Route exact path="/surveys" component={Dashboard} />
                         <Route path="/surveys/new" component={SurveyNew} />
                     </div>
