@@ -7,7 +7,7 @@ const Mailer = require('../services/Mailer');
 const surveyTemplate = require('../services/emailTemplates/surveyTemplates');
 
 module.exports = app => {
-    app.post('/api/surveys', requireLogin, requireCredit, (req, res) => {
+    app.post('/api/surveys', requireLogin, requireCredit, async (req, res) => {
 
         const {title, subject, body, recipients} =  req.body;
 
@@ -22,7 +22,16 @@ module.exports = app => {
         console.log(survey);
         //send Mail
         const mailer = new Mailer(survey, surveyTemplate(survey));
-        mailer.send();
+        try{
+            await mailer.send();
+            await survey.save();
+            req.user.credits -= 1;
+            const user = await req.user.save();
+            res.send(user);
+        } catch(err){
+            res.status(422).send(err);
+
+        }
 
     });
 };
